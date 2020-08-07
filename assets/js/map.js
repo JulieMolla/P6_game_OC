@@ -22,7 +22,7 @@ export class GameMap {
         let cellUpRight = this.getCell(x + 1, y + 1);
         let cellDownLeft = this.getCell(x - 1, y - 1);
         let cellDownRight = this.getCell(x + 1, y - 1);
-        if (
+        if ( // on place l'élément seulement si la cellule est vide et qu'il n'y a pas de joeueur autour
             cell.isEmpty() &&
             (!cellUp || !cellUp.has("player")) &&
             (!cellDown || !cellDown.has("player")) &&
@@ -37,7 +37,7 @@ export class GameMap {
             return;
         }
 
-        this.setRandomPosition(element);
+        this.setRandomPosition(element); // sinon on rappelle la méthode pour trouver une autre position aléatoire
 
     }
 

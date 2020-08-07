@@ -2,22 +2,20 @@
 
 export class Actions { // on crée la classe Actions
     constructor() {
-        this.up = []; // liste des cellules contenant une arme que le joueur peut rammasser 
-        this.down = []; // liste des cellules sur lesquelles le joueur peut se déplacer
-        this.left = []; // liste des cellulles dans lesquelles le joueur peut attaquer 
+        // Liste des cases possibles pour se déplacer dans chaque direction
+        this.up = [];
+        this.down = [];
+        this.left = [];
         this.right = [];
     }
 
     draw() {
-
+        // affichage des cellules dans chaque direction
 
         this.drawDirection("up");
         this.drawDirection("down");
         this.drawDirection("left");
         this.drawDirection("right");
-
-        // à faire: affichage pour les cellules pick 
-        // à faire: affichage pour les cellules attack
     }
 
     drawDirection(direction) {
@@ -35,7 +33,7 @@ export class Actions { // on crée la classe Actions
             context.lineTo(x + unit, y + unit);
             context.lineTo(x, y + unit);
             context.closePath();
-            context.fillStyle = "blue";
+            context.fillStyle = "rgba(100,200,100, 0.5)";
             context.fill();
         }
     }

@@ -11,38 +11,39 @@ export class Game {
         this.generateObstacles(8);// génération des obstacles
         this.generateWeapons();// génération des armes
         this.players = []; // initialisation pour l'ajout des joueurs
-        this.i = 0;
+        this.i = 0; // le "i" c'est le numéro du tour qu'on initialise à 0.
 
         const canvas = document.getElementById("map");
-        canvas.addEventListener("mousedown", (event) => {
-            const player = this.players[this.i % this.players.length]
+        canvas.addEventListener("mousedown", (event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
+            const player = this.players[this.i % this.players.length] // on récupère le joeur actif pour le tour
 
-            const rect = canvas.getBoundingClientRect();
-            const x = Math.floor((event.clientX - rect.left) / 20);
-            const y = Math.floor((event.clientY - rect.top) / 20);
-            const cell = this.map.getCell(x, y);
-            const upIndex = this.actions["up"].indexOf(cell);
-            if (upIndex != -1) {
-                player.move(this.actions["up"].slice(0, upIndex + 1))
-                this.i++
-                this.play()
+            const rect = canvas.getBoundingClientRect(); // récupère la position du canvas à l'écran
+            const x = Math.floor((event.clientX - rect.left) / 20); // récupère la position du click sur le canvas et on divise par l'unité de taille du canvas pour pouvoir récupérer l'index de la case en x
+            const y = Math.floor((event.clientY - rect.top) / 20); // idem pour y
+            const cell = this.map.getCell(x, y); // on récupère la cellule correspond au click
+
+            const upIndex = this.actions["up"].indexOf(cell); // on récupère l'index de la cellule dans le tableau des mmouvements vers le haut
+            if (upIndex != -1) { //si c'est moins 1, l'élément ne corresond pas à un mouvement possible vers le haut
+                player.move(this.actions["up"].slice(0, upIndex + 1)) //on fait bouger le joeur en lui passant toutes les cases qu'il va traverser
+                this.i++ // on incrémente le numéro du tour 
+                this.play() // nouveau tour de jeu
             }
 
-            const downIndex = this.actions["down"].indexOf(cell);
+            const downIndex = this.actions["down"].indexOf(cell); // idem => il faudra en faire une autre méthode
             if (downIndex != -1) {
                 player.move(this.actions["down"].slice(0, downIndex + 1))
                 this.i++
                 this.play()
             }
 
-            const leftIndex = this.actions["left"].indexOf(cell);
+            const leftIndex = this.actions["left"].indexOf(cell);// idem => il faudra en faire une autre méthode
             if (leftIndex != -1) {
                 player.move(this.actions["left"].slice(0, leftIndex + 1))
                 this.i++
                 this.play()
             }
 
-            const rightIndex = this.actions["right"].indexOf(cell);
+            const rightIndex = this.actions["right"].indexOf(cell);// idem => il faudra en faire une autre méthode
             if (rightIndex != -1) {
                 player.move(this.actions["right"].slice(0, rightIndex + 1))
                 this.i++
@@ -85,7 +86,7 @@ export class Game {
     draw() {
         const canvas = document.getElementById("map");
         const context = canvas.getContext("2d");
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // on efface le canvas 
         this.actions.draw(); // on affiche les actions dans le canvas 
         this.map.draw(); // affichage de la map dans le canvas
 
@@ -101,7 +102,7 @@ export class Game {
         return actions;
     }
 
-    checkDirection(actions, position, direction) {
+    checkDirection(actions, position, direction) { //vérifie les cases possible pour un déplacement dans une direction
         for (let i = 1; i <= 3; i++) {
             let cell;
             if (direction == "up") {

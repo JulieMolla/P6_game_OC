@@ -20,16 +20,16 @@ export class Cell {
         element.setPosition(this);//référence la cellule dans l'élément
     }
 
-    remove(element) {
-        this.elements = this.elements.filter(elem => elem != element);
-        element.setPosition(null);
+    remove(element) { // supprime un élément de la cellule
+        this.elements = this.elements.filter(elem => elem != element); // La méthode filter() crée et retourne un nouveau tableau contenant tous les éléments du tableau d'origine qui remplissent une condition déterminée par la fonction en paramètre.
+        element.setPosition(null); // L'élément n'est plus sur la carte. Il n'a donc plus de position.
     }
 
-    getType(type) {
-        return this.elements.find(element => {
+    getType(type) { // permet de récupérer un élément de type donné
+        return this.elements.find(element => { // La méthode find() renvoie la valeur du premier élément trouvé dans le tableau qui respecte la condition donnée par la fonction de test passée en argument. Sinon, la valeur undefined est renvoyée.
             switch (type) {
                 case "obstacle":
-                    return element instanceof Obstacle; // some vérifie qu'un des éléments du tableau est une instance de la classe Obstacle
+                    return element instanceof Obstacle; // retourne "vrai" si c'est une instance de Obstacle
                 case "weapon":
                     return element instanceof Weapon;
                 case "player":
@@ -79,8 +79,8 @@ export class Cell {
         return this.elements.length == 0;
     }
 
-    isAvailable() {
-        return this.isEmpty() || this.has("weapon");
+    isAvailable() { // une case est disponible si elle est vide ou si elle n'a pas d'obstacle ou de joueur
+        return this.isEmpty() || !this.has("obstacle") || !this.has("player");
     }
 
 

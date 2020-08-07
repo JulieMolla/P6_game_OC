@@ -29,20 +29,20 @@ export class Player {
 
     }
 
-    move(cells) {
+    move(cells) { // permet de déplacer le joeur grâce aux cellules qu'il va traverser
         this.speak("Let's move");
-        for (let i = 0; i < cells.length; i++) {
+        for (let i = 0; i < cells.length; i++) { // pour chaque cellule on place le joeueur sur la cellule 
             const cell = cells[i];
             this.position.remove(this);
             cell.add(this);
-            if (cell.has("weapon")) {
+            if (cell.has("weapon")) { // s'il y a une arme, on la ramasse. 
                 this.pickUpWeapon(cell);
             }
         }
 
     }
 
-    speak(message) {
+    speak(message) { // permet de faire parler le joeueu dans la console
         console.log(`${this.name}: ${message}`);
     }
 
@@ -54,11 +54,11 @@ export class Player {
 
     }
 
-    pickUpWeapon(cell) {
-        const weapon = cell.getType("weapon");
+    pickUpWeapon(cell) { // permet de récupérer une arme et de lâcher automatiquement celle qu'on a actuellement
+        const weapon = cell.getType("weapon"); // c'est l'arme à récupérer
         this.speak(`pick ${weapon.name}, bye bye ${this.weapon.name}`);
-        cell.remove(weapon);
-        cell.add(this.weapon);
-        this.weapon = weapon;
+        cell.remove(weapon); // on enlève l'arme de la cellule
+        cell.add(this.weapon); // on place l'arme courante dans la cellule
+        this.weapon = weapon; // on définit l'arme à ramasser commme arme courante
     }
 };
