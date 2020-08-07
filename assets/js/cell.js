@@ -26,7 +26,18 @@ export class Cell {
     }
 
     getType(type) {
-        return this.elements[type]
+        return this.elements.find(element => {
+            switch (type) {
+                case "obstacle":
+                    return element instanceof Obstacle; // some vérifie qu'un des éléments du tableau est une instance de la classe Obstacle
+                case "weapon":
+                    return element instanceof Weapon;
+                case "player":
+                    return element instanceof Player;
+                default:
+                    return false;
+            }
+        })
     }
 
     has(type) { //permet de vérifier si la cellule contient un type d'élément 

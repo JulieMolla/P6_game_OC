@@ -21,11 +21,34 @@ export class Game {
             const x = Math.floor((event.clientX - rect.left) / 20);
             const y = Math.floor((event.clientY - rect.top) / 20);
             const cell = this.map.getCell(x, y);
-            if (this.actions.move.includes(cell)) {
-                player.move(cell)
+            const upIndex = this.actions["up"].indexOf(cell);
+            if (upIndex != -1) {
+                player.move(this.actions["up"].slice(0, upIndex + 1))
                 this.i++
                 this.play()
             }
+
+            const downIndex = this.actions["down"].indexOf(cell);
+            if (downIndex != -1) {
+                player.move(this.actions["down"].slice(0, downIndex + 1))
+                this.i++
+                this.play()
+            }
+
+            const leftIndex = this.actions["left"].indexOf(cell);
+            if (leftIndex != -1) {
+                player.move(this.actions["left"].slice(0, leftIndex + 1))
+                this.i++
+                this.play()
+            }
+
+            const rightIndex = this.actions["right"].indexOf(cell);
+            if (rightIndex != -1) {
+                player.move(this.actions["right"].slice(0, rightIndex + 1))
+                this.i++
+                this.play()
+            }
+
         })
     }
 
@@ -52,6 +75,7 @@ export class Game {
 
     play() { // c'est l'exécution d'un tour de jeu
         const player = this.players[this.i % this.players.length]; // à faire: récupérer le joueur actif pour le tour
+        console.log(`A ${player.name} de jouer !`)
         this.actions = this.getPlayerActions(player.position); // on récupère les actions que le joueur peut faire
         this.draw(); //  
 
@@ -103,7 +127,7 @@ export class Game {
             }
 
             if (cell.isAvailable()) {
-                actions.move.push(cell)
+                actions[direction].push(cell)
             }
         }
 

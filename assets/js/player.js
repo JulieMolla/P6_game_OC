@@ -29,10 +29,17 @@ export class Player {
 
     }
 
-    move(cell) {
-        this.position.remove(this);
-        cell.add(this);
+    move(cells) {
         this.speak("Let's move");
+        for (let i = 0; i < cells.length; i++) {
+            const cell = cells[i];
+            this.position.remove(this);
+            cell.add(this);
+            if (cell.has("weapon")) {
+                this.pickUpWeapon(cell);
+            }
+        }
+
     }
 
     speak(message) {
@@ -47,7 +54,11 @@ export class Player {
 
     }
 
-    pickUpWeapon() { // à faire
-
+    pickUpWeapon(cell) {
+        const weapon = cell.getType("weapon");
+        this.speak(`pick ${weapon.name}, bye bye ${this.weapon.name}`);
+        cell.remove(weapon);
+        cell.add(this.weapon);
+        this.weapon = weapon;
     }
 };
