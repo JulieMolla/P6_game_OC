@@ -1,0 +1,15 @@
+.game { /* container des canvas*/
+    position: relative;
+    width: 500px;
+    height: 400px;
+}
+
+.game > * { /*chaque canvas est en position absolute pour qu'ils se superposent*/
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+/* essayer pour faire un seul canvas ils partageraient tous les mêmes cases avec ositionnement de cases qui m'arrang
