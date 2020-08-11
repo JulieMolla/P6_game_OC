@@ -56,7 +56,7 @@ export class GameMap {
         for (let y = 0; y < height; y++) { // boucle qui itère sur les lignes et qui ajoute les cellules à chaque ligne
             const cells = [];
             for (let x = 0; x < width; x++) { // boucle qui itère sur les cellules  et qui ajoute les cellules à chaque ligne
-                cells.push(new Cell(x, y));
+                cells.push(new Cell(x, y, this));
             }
             rows.push(cells);
         }

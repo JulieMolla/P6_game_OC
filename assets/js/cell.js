@@ -4,11 +4,12 @@ import { Weapon } from "./weapon.js";
 
 //Creation de la class Cell
 export class Cell {
-    constructor(x, y) { // initialisation des coordonnées de la cellule 
+    constructor(x, y, map) { // initialisation des coordonnées de la cellule 
         this.x = x;
         this.y = y;
         // this.elements = {};
         this.elements = [];
+        this.map = map;
 
     }
 
@@ -81,6 +82,41 @@ export class Cell {
 
     isAvailable() { // une case est disponible si elle est vide ou si elle n'a pas d'obstacle ou de joueur
         return this.isEmpty() || !this.has("obstacle") || !this.has("player");
+    }
+
+    getAdjacentPlayer() {
+        const up = this.map.getCell(this.x, this.y + 1);
+        const down = this.map.getCell(this.x, this.y - 1);
+        const left = this.map.getCell(this.x - 1, this.y);
+        const right = this.map.getCell(this.x + 1, this.y);
+
+        if (up) {
+            const upPlayer = up.getType("player");
+            if (upPlayer) {
+                return upPlayer;
+            }
+        }
+
+        if (down) {
+            const downPlayer = down.getType("player");
+            if (downPlayer) {
+                return downPlayer;
+            }
+        }
+
+        if (left) {
+            const leftPlayer = left.getType("player");
+            if (leftPlayer) {
+                return leftPlayer;
+            }
+        }
+
+        if (right) {
+            const rightPlayer = right.getType("player");
+            if (rightPlayer) {
+                return rightPlayer;
+            }
+        }
     }
 
 

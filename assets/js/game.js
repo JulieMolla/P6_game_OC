@@ -24,33 +24,77 @@ export class Game {
 
             const upIndex = this.actions["up"].indexOf(cell); // on récupère l'index de la cellule dans le tableau des mmouvements vers le haut
             if (upIndex != -1) { //si c'est moins 1, l'élément ne corresond pas à un mouvement possible vers le haut
-                player.move(this.actions["up"].slice(0, upIndex + 1)) //on fait bouger le joeur en lui passant toutes les cases qu'il va traverser
+                const enemy = player.move(this.actions["up"].slice(0, upIndex + 1)) //on fait bouger le joeur en lui passant toutes les cases qu'il va traverser
+                this.action = null;
+                this.draw();
+                if (enemy) {
+                    const killed = player.attack(enemy);
+                    if (killed) {
+                        this.enemykilled(enemy);
+                        return;
+                    }
+                }
                 this.i++ // on incrémente le numéro du tour 
                 this.play() // nouveau tour de jeu
             }
 
             const downIndex = this.actions["down"].indexOf(cell); // idem => il faudra en faire une autre méthode
             if (downIndex != -1) {
-                player.move(this.actions["down"].slice(0, downIndex + 1))
+                const enemy = player.move(this.actions["down"].slice(0, downIndex + 1));
+                this.action = null;
+                this.draw();
+                if (enemy) {
+                    const killed = player.attack(enemy);
+                    if (killed) {
+                        this.enemykilled(enemy);
+                        return;
+                    }
+                }
                 this.i++
                 this.play()
             }
 
             const leftIndex = this.actions["left"].indexOf(cell);// idem => il faudra en faire une autre méthode
             if (leftIndex != -1) {
-                player.move(this.actions["left"].slice(0, leftIndex + 1))
+                const enemy = player.move(this.actions["left"].slice(0, leftIndex + 1));
+                this.action = null;
+                this.draw();
+                if (enemy) {
+                    const killed = player.attack(enemy);
+                    if (killed) {
+                        this.enemykilled(enemy);
+                        return;
+                    }
+                }
                 this.i++
                 this.play()
             }
 
             const rightIndex = this.actions["right"].indexOf(cell);// idem => il faudra en faire une autre méthode
             if (rightIndex != -1) {
-                player.move(this.actions["right"].slice(0, rightIndex + 1))
+                const enemy = player.move(this.actions["right"].slice(0, rightIndex + 1));
+                this.action = null;
+                this.draw();
+                if (enemy) {
+                    const killed = player.attack(enemy);
+                    if (killed) {
+                        this.enemykilled(enemy);
+                        return;
+                    }
+                }
                 this.i++
                 this.play()
             }
 
         })
+    }
+
+    enemykilled(enemy) {
+        this.players = this.players.filter(player => player != enemy)
+        if (this.players.length == 1) {
+            const winner = this.players[0];
+            console.log(`${winner.name} a gagné !`);
+        }
     }
 
 
@@ -77,8 +121,24 @@ export class Game {
     play() { // c'est l'exécution d'un tour de jeu
         const player = this.players[this.i % this.players.length]; // à faire: récupérer le joueur actif pour le tour
         console.log(`A ${player.name} de jouer !`)
+        const enemy = player.position.getAdjacentPlayer();
+        if (enemy) {
+            const killed = player.attack(enemy);
+            this.action = null;
+            this.draw();
+            if (killed) {
+                this.enemykilled(enemy);
+                return;
+            }
+
+            this.i++ // on incrémente le numéro du tour 
+            this.play() // nouveau tour de jeu
+            return;
+        }
         this.actions = this.getPlayerActions(player.position); // on récupère les actions que le joueur peut faire
-        this.draw(); //  
+        this.draw(); // 
+
+
 
         // à faire: récupérer l'action choisie par le joueur et l'exécuter
     }
@@ -87,7 +147,9 @@ export class Game {
         const canvas = document.getElementById("map");
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, context.canvas.width, context.canvas.height); // on efface le canvas 
-        this.actions.draw(); // on affiche les actions dans le canvas 
+        if (this.actions) {
+            this.actions.draw(); // on affiche les actions dans le canvas 
+        }
         this.map.draw(); // affichage de la map dans le canvas
 
 

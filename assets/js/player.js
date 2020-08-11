@@ -31,18 +31,22 @@ export class Player {
 
     move(cells) { // permet de déplacer le joeur grâce aux cellules qu'il va traverser
         this.speak("Let's move");
-        for (let i = 0; i < cells.length; i++) { // pour chaque cellule on place le joeueur sur la cellule 
+        for (let i = 0; i < cells.length; i++) { // pour chaque cellule on place le joueur sur la cellule 
             const cell = cells[i];
             this.position.remove(this);
             cell.add(this);
             if (cell.has("weapon")) { // s'il y a une arme, on la ramasse. 
                 this.pickUpWeapon(cell);
             }
+            const enemy = cell.getAdjacentPlayer();
+            if (enemy) {
+                return enemy;
+            }
         }
 
     }
 
-    speak(message) { // permet de faire parler le joeueu dans la console
+    speak(message) { // permet de faire parler le joueur dans la console
         console.log(`${this.name}: ${message}`);
     }
 
@@ -50,8 +54,20 @@ export class Player {
 
     }
 
-    attack() { // à faire
+    attack(enemy) {
+        this.speak(`Attaque ${enemy.name} !`);
+        return enemy.hurt(this.weapon);
+    }
 
+    hurt(weapon) {
+        this.health -= weapon.power;
+        this.speak(`Oh ! Je suis blessé ! J'ai perdu ${weapon.power} points de vie. Il me reste ${this.health} points de vie.`)
+        if (this.health <= 0) {
+            this.speak(`Je suis mort !`);
+            this.position.remove(this);
+            return true;
+        }
+        return false;
     }
 
     pickUpWeapon(cell) { // permet de récupérer une arme et de lâcher automatiquement celle qu'on a actuellement
