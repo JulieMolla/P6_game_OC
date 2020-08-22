@@ -50,22 +50,28 @@ export class Player {
         console.log(`${this.name}: ${message}`);
     }
 
-    defend() { // à faire
-
+    defend() {
+        this.speak("Je me protège !");
+        this.protect = true;
     }
 
-    attack(enemy) {
+    attack(enemy) { //on renvoie true si l'ennemie est tué 
+        this.protect = false; // on attaque donc on n'est plus en position de défense
         this.speak(`Attaque ${enemy.name} !`);
-        return enemy.hurt(this.weapon);
+        return enemy.hurt(this.weapon); // on blesse l'ennemie avec l'arme
     }
 
-    hurt(weapon) {
-        this.health -= weapon.power;
-        this.speak(`Oh ! Je suis blessé ! J'ai perdu ${weapon.power} points de vie. Il me reste ${this.health} points de vie.`)
-        if (this.health <= 0) {
+    hurt(weapon) { // on est blessé par une arme 
+        let damage = weapon.power;
+        if (this.protect) { // si on est en position de défense, les dégâts sont réduits de moitié
+            damage = weapon.power / 2;
+        }
+        this.health -= damage;// on mets à jour les points de vie
+        this.speak(`Oh ! Je suis blessé ! J'ai perdu ${damage} points de vie. Il me reste ${this.health} points de vie.`)
+        if (this.health <= 0) { // si les points de vie sont inférieurs ou égal à 0
             this.speak(`Je suis mort !`);
-            this.position.remove(this);
-            return true;
+            this.position.remove(this); // on enlève le joueur de la map 
+            return true; // renvoie true pour indiquer que le joueur est ko
         }
         return false;
     }

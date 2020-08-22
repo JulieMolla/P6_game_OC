@@ -13,90 +13,54 @@ export class Game {
         this.players = []; // initialisation pour l'ajout des joueurs
         this.i = 0; // le "i" c'est le numéro du tour qu'on initialise à 0.
 
-        const canvas = document.getElementById("map");
-        canvas.addEventListener("mousedown", (event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
-            const player = this.players[this.i % this.players.length] // on récupère le joeur actif pour le tour
 
-            const rect = canvas.getBoundingClientRect(); // récupère la position du canvas à l'écran
-            const x = Math.floor((event.clientX - rect.left) / 20); // récupère la position du click sur le canvas et on divise par l'unité de taille du canvas pour pouvoir récupérer l'index de la case en x
-            const y = Math.floor((event.clientY - rect.top) / 20); // idem pour y
-            const cell = this.map.getCell(x, y); // on récupère la cellule correspond au click
+        this.battleDiv = document.getElementById("battle"); // c'est l'élément qui contient les boutons de la bataille
 
-            const upIndex = this.actions["up"].indexOf(cell); // on récupère l'index de la cellule dans le tableau des mmouvements vers le haut
-            if (upIndex != -1) { //si c'est moins 1, l'élément ne corresond pas à un mouvement possible vers le haut
-                const enemy = player.move(this.actions["up"].slice(0, upIndex + 1)) //on fait bouger le joeur en lui passant toutes les cases qu'il va traverser
-                this.action = null;
-                this.draw();
-                if (enemy) {
-                    const killed = player.attack(enemy);
-                    if (killed) {
-                        this.enemykilled(enemy);
-                        return;
-                    }
-                }
-                this.i++ // on incrémente le numéro du tour 
-                this.play() // nouveau tour de jeu
-            }
 
-            const downIndex = this.actions["down"].indexOf(cell); // idem => il faudra en faire une autre méthode
-            if (downIndex != -1) {
-                const enemy = player.move(this.actions["down"].slice(0, downIndex + 1));
-                this.action = null;
-                this.draw();
-                if (enemy) {
-                    const killed = player.attack(enemy);
-                    if (killed) {
-                        this.enemykilled(enemy);
-                        return;
-                    }
-                }
-                this.i++
-                this.play()
-            }
 
-            const leftIndex = this.actions["left"].indexOf(cell);// idem => il faudra en faire une autre méthode
-            if (leftIndex != -1) {
-                const enemy = player.move(this.actions["left"].slice(0, leftIndex + 1));
-                this.action = null;
-                this.draw();
-                if (enemy) {
-                    const killed = player.attack(enemy);
-                    if (killed) {
-                        this.enemykilled(enemy);
-                        return;
-                    }
-                }
-                this.i++
-                this.play()
-            }
 
-            const rightIndex = this.actions["right"].indexOf(cell);// idem => il faudra en faire une autre méthode
-            if (rightIndex != -1) {
-                const enemy = player.move(this.actions["right"].slice(0, rightIndex + 1));
-                this.action = null;
-                this.draw();
-                if (enemy) {
-                    const killed = player.attack(enemy);
-                    if (killed) {
-                        this.enemykilled(enemy);
-                        return;
-                    }
-                }
-                this.i++
-                this.play()
-            }
-
-        })
     }
 
-    enemykilled(enemy) {
-        this.players = this.players.filter(player => player != enemy)
-        if (this.players.length == 1) {
-            const winner = this.players[0];
+    enemykilled(enemy) { // c'est la méthode qui permet d'afficher le gagnant
+        this.battleDiv.style.display = 'none'; // on masque les boutons
+        this.players = this.players.filter(player => player != enemy) // on supprime le joueur tué de la liste des joueurs
+        if (this.players.length == 1) { // s'il n'y a plus qu'un joueur
+            const winner = this.players[0]; // c'est le gagnant
             console.log(`${winner.name} a gagné !`);
+        }
+        this.draw(); // on raffraichit l'affichage
+    }
+
+    findUserDirection(cell) { // retourne les cellules que le joueur va traverser jusqu'au clic de l'utilisateur
+        const upIndex = this.actions["up"].indexOf(cell); // on récupère l'index de la cellule dans le tableau des mmouvements vers le haut
+        if (upIndex != -1) { // si c'est moins 1, l'élément ne corresond pas à un mouvement possible vers le haut
+            return this.actions["up"].slice(0, upIndex + 1); //enlève les cellules qui sont après le clic de l'utilisateur
+        }
+        const downIndex = this.actions["down"].indexOf(cell);
+        if (downIndex != -1) {
+            return this.actions["down"].slice(0, downIndex + 1);
+        }
+        const leftIndex = this.actions["left"].indexOf(cell);
+        if (leftIndex != -1) {
+            return this.actions["left"].slice(0, leftIndex + 1);
+        }
+        const rightIndex = this.actions["right"].indexOf(cell);
+        if (rightIndex != -1) {
+            return this.actions["right"].slice(0, rightIndex + 1);
         }
     }
 
+    onUserMoveChoice(cells) { // déplace le joueur jusqu'à la cellule choisie
+        this.actions = null; // l'utilisateur a fait son choix donc on efface les actions
+        const enemy = this.player.move(cells) //on fait bouger le joeur en lui passant toutes les cases qu'il va traverser
+        this.draw();// on rafraichit la page
+
+        if (enemy) { // s'il y a un ennemie
+            this.askAttackOrDefend(enemy); // on demande à l'utilisateur s'il attaque ou s'il se défend
+        } else {
+            this.play(this.i + 1) // nouveau tour de jeu
+        }
+    }
 
     generateObstacles(nb) {
         for (let i = 0; i < nb; i++) {
@@ -105,42 +69,38 @@ export class Game {
     }
 
     generateWeapons() {
-        this.map.setRandomPosition(new Weapon("Famas", "", 55));
-        this.map.setRandomPosition(new Weapon("Arc", "", 25));
-        this.map.setRandomPosition(new Weapon("Pistolet", "", 40));
+        this.map.setRandomPosition(new Weapon("Code civil", "", 55));
+        this.map.setRandomPosition(new Weapon("Balance de la justice", "", 25));
+        this.map.setRandomPosition(new Weapon("Marteau", "", 40));
     }
 
     addPlayer(name) { // on ajoute des joueurs manuellement 
-        const defaultWeapon = new Weapon("Couteau", "", 10); // avec une arme par défaut
+        const defaultWeapon = new Weapon("Stylo", "", 10); // avec une arme par défaut
         const player = new Player(name, defaultWeapon); // on instancie le joueur
         this.map.setRandomPosition(player); // on place le joueur aléatoirement sur la carte
         this.players.push(player); // on ajoute le joueur à la liste des joueurs
         this.map.draw()
     }
 
-    play() { // c'est l'exécution d'un tour de jeu
-        const player = this.players[this.i % this.players.length]; // à faire: récupérer le joueur actif pour le tour
-        console.log(`A ${player.name} de jouer !`)
-        const enemy = player.position.getAdjacentPlayer();
+    askAttackOrDefend(enemy) {
+        this.player.speak('Ennemie en vue !'); // fait parler le joueur 
+        this.enemy = enemy; // définit l'ennemie pour le tour
+        this.battleDiv.style.display = 'block'; // affiche les boutons 
+        this.draw(); // on raffraichit l'affichage
+    }
+
+    play(i) { // c'est l'exécution d'un tour de jeu
+        this.i = i; // on met à jour le numéro du tour
+        this.player = this.players[this.i % this.players.length]; // définit le joueur actif pour le tour
+        console.log(`A ${this.player.name} de jouer !`)
+        const enemy = this.player.position.getAdjacentPlayer(); // vérifie s'il y a des ennemies autour du joueur
         if (enemy) {
-            const killed = player.attack(enemy);
-            this.action = null;
-            this.draw();
-            if (killed) {
-                this.enemykilled(enemy);
-                return;
-            }
-
-            this.i++ // on incrémente le numéro du tour 
-            this.play() // nouveau tour de jeu
-            return;
+            this.askAttackOrDefend(enemy); // s'il y en a, on demande à l'utilisateur ce qu'il veut faire
         }
-        this.actions = this.getPlayerActions(player.position); // on récupère les actions que le joueur peut faire
-        this.draw(); // 
-
-
-
-        // à faire: récupérer l'action choisie par le joueur et l'exécuter
+        else { // s'il n'y a pas d'ennemi autour, le joueur peut se déplacer
+            this.actions = this.getPlayerActions(this.player.position); // on récupère les actions que le joueur peut faire
+            this.draw(); // on rafraichit l'affichage pour afficher les nouvelles actions possibles
+        }
     }
 
     draw() {

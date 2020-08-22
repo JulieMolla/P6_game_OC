@@ -84,16 +84,16 @@ export class Cell {
         return this.isEmpty() || !this.has("obstacle") || !this.has("player");
     }
 
-    getAdjacentPlayer() {
-        const up = this.map.getCell(this.x, this.y + 1);
+    getAdjacentPlayer() { // retourne un joueur s'il y en a un autour de la cellule
+        const up = this.map.getCell(this.x, this.y + 1); // on récupère la cellule du haut
         const down = this.map.getCell(this.x, this.y - 1);
         const left = this.map.getCell(this.x - 1, this.y);
         const right = this.map.getCell(this.x + 1, this.y);
 
-        if (up) {
-            const upPlayer = up.getType("player");
-            if (upPlayer) {
-                return upPlayer;
+        if (up) { // si la cellule existe
+            const upPlayer = up.getType("player"); // on récupère l'élément de type "joueur"
+            if (upPlayer) { // s'il y en a un 
+                return upPlayer; // on retourne le joueur
             }
         }
 
