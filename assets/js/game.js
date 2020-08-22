@@ -3,29 +3,28 @@ import { Obstacle } from "./obstacle.js";
 import { Weapon } from "./weapon.js";
 import { Player } from "./player.js";
 import { Actions } from "./actions.js";
+import { Vue } from "./vue.js";
+import { Listener } from "./listener.js";
 
 export class Game {
     constructor() {
-        this.map = new GameMap(10, 5);//création d'une Map de 10 par 5
+        const width = 15; // largeur de la map
+        const height = 10; // hauteur de la map
+        this.vue = new Vue(width, height); // création de la classe qui va gérer l'affichage
+        new Listener(this); //création de la classe qui va gérer les actions de l'utilisateur 
+        this.map = new GameMap(width, height); // création de la map
 
-        this.generateObstacles(8);// génération des obstacles
+        this.generateObstacles(15);// génération des obstacles
         this.generateWeapons();// génération des armes
         this.players = []; // initialisation pour l'ajout des joueurs
-        this.i = 0; // le "i" c'est le numéro du tour qu'on initialise à 0.
-
-
-        this.battleDiv = document.getElementById("battle"); // c'est l'élément qui contient les boutons de la bataille
-
-
-
-
+        this.tour = 0; // le "i" c'est le numéro du tour qu'on initialise à 0.
     }
 
     enemykilled(enemy) { // c'est la méthode qui permet d'afficher le gagnant
-        this.battleDiv.style.display = 'none'; // on masque les boutons
-        this.players = this.players.filter(player => player != enemy) // on supprime le joueur tué de la liste des joueurs
-        if (this.players.length == 1) { // s'il n'y a plus qu'un joueur
-            const winner = this.players[0]; // c'est le gagnant
+        this.vue.removeBattleMode(); // on masque les boutons
+        const remainingPlayers = this.players.filter(player => player != enemy) // on supprime le joueur tué de la liste des joueurs
+        if (remainingPlayers.length == 1) { // s'il n'y a plus qu'un joueur
+            const winner = remainingPlayers[0]; // c'est le gagnant
             console.log(`${winner.name} a gagné !`);
         }
         this.draw(); // on raffraichit l'affichage
@@ -58,7 +57,7 @@ export class Game {
         if (enemy) { // s'il y a un ennemie
             this.askAttackOrDefend(enemy); // on demande à l'utilisateur s'il attaque ou s'il se défend
         } else {
-            this.play(this.i + 1) // nouveau tour de jeu
+            this.play(this.tour + 1) // nouveau tour de jeu
         }
     }
 
@@ -69,13 +68,13 @@ export class Game {
     }
 
     generateWeapons() {
-        this.map.setRandomPosition(new Weapon("Code civil", "", 55));
-        this.map.setRandomPosition(new Weapon("Balance de la justice", "", 25));
-        this.map.setRandomPosition(new Weapon("Marteau", "", 40));
+        this.map.setRandomPosition(new Weapon("Arme du crime", "", 55));
+        this.map.setRandomPosition(new Weapon("Preuve ADN", "", 40));
+        this.map.setRandomPosition(new Weapon("Témoignage", "", 25));
     }
 
     addPlayer(name) { // on ajoute des joueurs manuellement 
-        const defaultWeapon = new Weapon("Stylo", "", 10); // avec une arme par défaut
+        const defaultWeapon = new Weapon("Code pénal", "", 10); // avec une arme par défaut
         const player = new Player(name, defaultWeapon); // on instancie le joueur
         this.map.setRandomPosition(player); // on place le joueur aléatoirement sur la carte
         this.players.push(player); // on ajoute le joueur à la liste des joueurs
@@ -85,13 +84,14 @@ export class Game {
     askAttackOrDefend(enemy) {
         this.player.speak('Ennemie en vue !'); // fait parler le joueur 
         this.enemy = enemy; // définit l'ennemie pour le tour
-        this.battleDiv.style.display = 'block'; // affiche les boutons 
+        this.vue.setBattleMode(); // affiche les boutons 
         this.draw(); // on raffraichit l'affichage
     }
 
     play(i) { // c'est l'exécution d'un tour de jeu
-        this.i = i; // on met à jour le numéro du tour
-        this.player = this.players[this.i % this.players.length]; // définit le joueur actif pour le tour
+        this.tour = i; // on met à jour le numéro du tour
+        this.playerId = this.tour % this.players.length;
+        this.player = this.players[this.playerId]; // définit le joueur actif pour le tour
         console.log(`A ${this.player.name} de jouer !`)
         const enemy = this.player.position.getAdjacentPlayer(); // vérifie s'il y a des ennemies autour du joueur
         if (enemy) {
@@ -104,9 +104,8 @@ export class Game {
     }
 
     draw() {
-        const canvas = document.getElementById("map");
-        const context = canvas.getContext("2d");
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height); // on efface le canvas 
+        this.vue.displayPlayers(this.players, this.tour); // affichage des informations des joueurs dans la page html
+        this.vue.clear(); // on efface le canvas 
         if (this.actions) {
             this.actions.draw(); // on affiche les actions dans le canvas 
         }
@@ -125,10 +124,10 @@ export class Game {
     }
 
     checkDirection(actions, position, direction) { //vérifie les cases possible pour un déplacement dans une direction
-        for (let i = 1; i <= 3; i++) {
+        for (let i = 1; i <= 3; i++) { //on vérifie trois cases 
             let cell;
             if (direction == "up") {
-                cell = this.map.getCell(position.x, position.y + i)
+                cell = this.map.getCell(position.x, position.y + i) // on récupère la cellule correspondant à la direction
             }
             if (direction == "down") {
                 cell = this.map.getCell(position.x, position.y - i)
@@ -140,17 +139,12 @@ export class Game {
                 cell = this.map.getCell(position.x - i, position.y)
             }
 
-            if (!cell) {
+            if (!cell || cell.has("obstacle") || cell.has("player")) { // s'il n'y a pas de cellule ou s'il y a un obstacle ou un joueur, on arrête la boucle
                 break;
             }
 
-
-            if (cell.has("obstacle") || cell.has("player")) {
-                break;
-            }
-
-            if (cell.isAvailable()) {
-                actions[direction].push(cell)
+            if (cell.isAvailable()) { // si la cellule est disponile
+                actions[direction].push(cell) // on l'ajoute aux déplacements possibles
             }
         }
 

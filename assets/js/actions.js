@@ -19,22 +19,9 @@ export class Actions { // on crée la classe Actions
     }
 
     drawDirection(direction) {
-        const unit = 20;
-        const canvas = document.getElementById("map");
-        const context = canvas.getContext("2d");
         for (let i = 0; i < this[direction].length; i++) { // on affiche chaque cellulle de déplacement d'une couleur différente 
             const move = this[direction][i];
-            const x = move.x * unit;
-            const y = move.y * unit;
-
-            context.beginPath();
-            context.moveTo(x, y);
-            context.lineTo(x + unit, y);
-            context.lineTo(x + unit, y + unit);
-            context.lineTo(x, y + unit);
-            context.closePath();
-            context.fillStyle = "rgba(100,200,100, 0.5)";
-            context.fill();
+            window.vue.draw(move, { fill: "rgba(100,200,100, 0.5)" });
         }
     }
 }

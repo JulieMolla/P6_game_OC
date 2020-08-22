@@ -11,22 +11,7 @@ export class Player {
     }
 
     draw() { // voir explications dans la class cell
-        const canvas = document.getElementById("map");
-        const context = canvas.getContext("2d");
-
-        const unit = 20;
-        const x = this.position.x * unit;
-        const y = this.position.y * unit;
-
-        context.beginPath();
-        context.moveTo(x, y);
-        context.lineTo(x + unit, y);
-        context.lineTo(x + unit, y + unit);
-        context.lineTo(x, y + unit)
-        context.closePath();
-        context.fillStyle = "green";
-        context.fill(); // remplissage
-
+        window.vue.draw(this.position, { fill: "green" }); // on dessine le joueur
     }
 
     move(cells) { // permet de déplacer le joeur grâce aux cellules qu'il va traverser
@@ -51,7 +36,7 @@ export class Player {
     }
 
     defend() {
-        this.speak("Je me protège !");
+        this.speak("Objection !");
         this.protect = true;
     }
 

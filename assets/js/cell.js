@@ -54,22 +54,7 @@ export class Cell {
     }
 
     draw() { // c'est pour gérer l'affichage d'une cellule 
-        const canvas = document.getElementById("map"); // on récupère l'élément canvas
-        const context = canvas.getContext("2d"); // on récupère le contexte
-
-        const unit = 20; // c'est l'échelle d'affichage d'une cellule en pixels
-        const x = this.x * unit; // c'est la position de la cellule en pixels 
-        const y = this.y * unit; // idem
-
-        context.beginPath(); // on dit à canvas qu'on démarre un tracé 
-        context.moveTo(x, y); // on se place à la position de la cellule
-        context.lineTo(x + unit, y); // on trace un trait d'une unité vers la droite
-        context.lineTo(x + unit, y + unit); // on trace un trait d'une unité vers le bas
-        context.lineTo(x, y + unit) // on trace un trait d'une unité vers la gauche
-        context.closePath(); // on ferme le tracé 
-        context.strokeStyle = "black"; // couleur de la bordure
-        context.stroke(); // on dessine la bordure 
-
+        window.vue.draw(this, { stroke: "black" }); // on dessine la cellule
         for (let i = 0; i < this.elements.length; i++) { // pour chaque élément de la cellule 
             const element = this.elements[i];
             element.draw(); // on dessine l'élément 

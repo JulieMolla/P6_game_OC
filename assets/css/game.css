@@ -1,15 +1,37 @@
-.game { /* container des canvas*/
-    position: relative;
-    width: 500px;
-    height: 400px;
+body {
+    display: grid;
+    grid-template-rows: min-content auto 150px;
+    height: 100vh;
 }
-
-.game > * { /*chaque canvas est en position absolute pour qu'ils se superposent*/
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    
+canvas {
+    display: block;
+    margin: auto;
 }
-
-/* essayer pour faire un seul canvas ils partageraient tous les mêmes cases avec ositionnement de cases qui m'arrang
+    
+#players {
+    display: flex;
+    justify-content: space-between;
+}
+    
+.player h2 {
+    border-bottom:2px solid transparent;
+}
+    
+.player.active h2 {
+    border-color: red;
+}
+    
+    
+    
+.winner {
+    background: green;
+}
+    
+.buttons {
+    display: none;
+}
+    
+.battle .active .buttons {
+    display: block;
+}
