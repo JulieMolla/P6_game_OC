@@ -2,16 +2,37 @@ body {
     display: grid;
     grid-template-rows: min-content auto 150px;
     height: 100vh;
+
+    background-color: #cd9c72;
+    color: #2d0f13;
+    grid-gap: 10px;
+}
+
+header {
+    text-align: center;
+    padding: 10px; 
+    background-color: #680212;
+    color: #ebe7db;
 }
     
 canvas {
     display: block;
     margin: auto;
+    background-color: #ebe7db;
+}
+
+.progress-bar {
+    background-color: #aa393e;
 }
     
 #players {
     display: flex;
     justify-content: space-between;
+    padding: 10px;
+}
+
+.player {
+    padding: 10px;
 }
     
 .player h2 {
@@ -19,13 +40,13 @@ canvas {
 }
     
 .player.active h2 {
-    border-color: red;
+    border-color: #aa393e;
 }
     
     
     
 .winner {
-    background: green;
+    background: #e8b029;
 }
     
 .buttons {

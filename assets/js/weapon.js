@@ -11,7 +11,7 @@ export class Weapon {
     }
 
     draw() { // voir explications dans la classe cell
-        window.vue.draw(this.position, { fill: "yellow" }); // on dessine l'arme
+        window.vue.draw(this.position, { fill: "#b17669", image: this.picture }); // on dessine l'arme
     }
 
 }

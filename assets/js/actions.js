@@ -21,7 +21,7 @@ export class Actions { // on crée la classe Actions
     drawDirection(direction) {
         for (let i = 0; i < this[direction].length; i++) { // on affiche chaque cellulle de déplacement d'une couleur différente 
             const move = this[direction][i];
-            window.vue.draw(move, { fill: "rgba(100,200,100, 0.5)" });
+            window.vue.draw(move, { fill: "#f4ad7688" });
         }
     }
 }

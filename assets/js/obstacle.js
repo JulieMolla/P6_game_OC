@@ -4,6 +4,6 @@ export class Obstacle {
     }
 
     draw() {
-        window.vue.draw(this.position, { fill: "grey" }); // on dessine l'obstacle
+        window.vue.draw(this.position, { fill: "#3d0f13", image: "./assets/images/gavel.svg" }); // on dessine l'obstacle
     }
 }

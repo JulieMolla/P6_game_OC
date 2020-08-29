@@ -82,6 +82,22 @@ export class Vue {
             this.context.fillStyle = options.fill;
             this.context.fill(); // remplissage
         }
+
+        if (options.image) {
+            const img = new Image(); // création d'un objet Image 
+            img.onload = () => { // action réalisée quand l'image est chargée
+                this.context.drawImage(img, x, y, this.unit, this.unit); //affichage de l'image dans le canvas
+            }
+            img.src = options.image; // définition de l'url de l'image
+        }
+
+        if (options.sprite) {
+            const img = new Image(); // création d'un objet Image
+            img.onload = () => { // action réalisée quand l'image est chargée
+                this.context.drawImage(img, options.sprite.x, options.sprite.y, options.sprite.width, options.sprite.height, x, y, this.unit, this.unit); // affichage du sprite dans le canvas
+            }
+            img.src = options.sprite.url;
+        }
     }
 }
 

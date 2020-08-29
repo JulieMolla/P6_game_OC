@@ -68,13 +68,13 @@ export class Game {
     }
 
     generateWeapons() {
-        this.map.setRandomPosition(new Weapon("Arme du crime", "", 55));
-        this.map.setRandomPosition(new Weapon("Preuve ADN", "", 40));
-        this.map.setRandomPosition(new Weapon("Témoignage", "", 25));
+        this.map.setRandomPosition(new Weapon("Arme du crime", "/assets/images/guncrime.png", 55));
+        this.map.setRandomPosition(new Weapon("Empreinte digitale", "/assets/images/fingerprint.png", 40));
+        this.map.setRandomPosition(new Weapon("Témoignage", "/assets/images/testimony.png", 25));
     }
 
     addPlayer(name) { // on ajoute des joueurs manuellement 
-        const defaultWeapon = new Weapon("Code pénal", "", 10); // avec une arme par défaut
+        const defaultWeapon = new Weapon("Code pénal", "/assets/images/booklaw.svg", 10); // avec une arme par défaut
         const player = new Player(name, defaultWeapon); // on instancie le joueur
         this.map.setRandomPosition(player); // on place le joueur aléatoirement sur la carte
         this.players.push(player); // on ajoute le joueur à la liste des joueurs
@@ -99,8 +99,8 @@ export class Game {
         }
         else { // s'il n'y a pas d'ennemi autour, le joueur peut se déplacer
             this.actions = this.getPlayerActions(this.player.position); // on récupère les actions que le joueur peut faire
-            this.draw(); // on rafraichit l'affichage pour afficher les nouvelles actions possibles
         }
+        this.draw(); // on rafraichit l'affichage pour afficher les nouvelles actions possibles
     }
 
     draw() {

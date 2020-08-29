@@ -1,3 +1,4 @@
+
 //Creation de la class Player
 export class Player {
     constructor(name, weapon) {
@@ -11,7 +12,7 @@ export class Player {
     }
 
     draw() { // voir explications dans la class cell
-        window.vue.draw(this.position, { fill: "green" }); // on dessine le joueur
+        window.vue.draw(this.position, { fill: "#aa393e", sprite: { url: "/assets/images/lawyer.png", x: 0, y: 0, width: 63.75, height: 63.75 } }); // on dessine le joueur
     }
 
     move(cells) { // permet de déplacer le joeur grâce aux cellules qu'il va traverser
