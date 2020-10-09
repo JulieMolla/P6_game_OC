@@ -1,7 +1,10 @@
+import { throttle } from "./utils.js";
+
 export class Listener {
     constructor(game) {
         this.game = game; // on garde une référence vers le jeu
         this.initMoveListener(); // on initialise un listener pour les déplacements
+        this.initHoverListener();
         this.initAttackListener(); // on initialise un listener pour les attaques
         this.initDefendListener(); // on initialise un listener pour les défenses
     }
@@ -25,6 +28,22 @@ export class Listener {
             }
             this.game.onUserMoveChoice(cells); // cela va déplacer le joueur
         })
+    }
+
+    initHoverListener() {
+        window.vue.canvas.addEventListener("mousemove", throttle((event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
+
+            const rect = window.vue.canvas.getBoundingClientRect(); // récupère la position du canvas à l'écran
+            const unit = window.vue.unit;
+            const x = Math.floor((event.clientX - rect.left) / unit); // récupère la position du click sur le canvas et on divise par l'unité de taille du canvas pour pouvoir récupérer l'index de la case en x
+            const y = Math.floor((event.clientY - rect.top) / unit); // idem pour y
+            const cell = this.game.map.getCell(x, y); // on récupère la cellule correspond au click
+            if (cell == this.hoverCell) {
+                return;
+            }
+            this.hoverCell = cell;
+            cell.drawLegend();
+        }, 100))
     }
 
     initAttackListener() {

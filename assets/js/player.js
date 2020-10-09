@@ -1,10 +1,11 @@
 
 //Creation de la class Player
 export class Player {
-    constructor(name, weapon) {
+    constructor(name, weapon, image) {
         this.name = name;
         this.health = 100;
         this.weapon = weapon;
+        this.image = image;
     }
 
     setPosition(cell) { // on assigne la cellule en tant que position du joueur
@@ -12,7 +13,7 @@ export class Player {
     }
 
     draw() { // voir explications dans la class cell
-        window.vue.draw(this.position, { fill: "#aa393e", sprite: { url: "/assets/images/lawyer.png", x: 0, y: 0, width: 63.75, height: 63.75 } }); // on dessine le joueur
+        window.vue.draw(this.position, { fill: "#aa393e", sprite: this.image }); // on dessine le joueur
     }
 
     move(cells) { // permet de déplacer le joeur grâce aux cellules qu'il va traverser

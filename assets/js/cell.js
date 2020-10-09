@@ -110,6 +110,22 @@ export class Cell {
         }
     }
 
+    drawLegend() {
+        $('#legend').text("");
+        if (this.has("player")) {
+            //window.vue.drawLegend(this, this.getType("player").name);
+            $('#legend').text(this.getType("player").name);
+        }
+        if (this.has("weapon")) {
+            //window.vue.drawLegend(this, this.getType("weapon").name);
+            $('#legend').text(this.getType("weapon").name);
+        }
+        if (this.has("obstacle")) {
+            // window.vue.drawLegend(this, "Obstacle");
+            $('#legend').text("Obstacle");
+        }
+    }
+
 
 }
 

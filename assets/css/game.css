@@ -2,9 +2,9 @@ body {
     display: grid;
     grid-template-rows: min-content auto 150px;
     height: 100vh;
+ 
 
-    background-color: #cd9c72;
-    color: #2d0f13;
+    background-color: #343a40;
     grid-gap: 10px;
 }
 
@@ -33,16 +33,19 @@ canvas {
 
 .player {
     padding: 10px;
+    color: #ebe7db;
+
 }
     
 .player h2 {
     border-bottom:2px solid transparent;
+
 }
     
 .player.active h2 {
     border-color: #aa393e;
 }
-    
+
     
     
 .winner {
@@ -55,4 +58,10 @@ canvas {
     
 .battle .active .buttons {
     display: block;
+}
+
+.legend {
+    height: 25px;
+    text-align: center;
+    color: #ebe7db;
 }

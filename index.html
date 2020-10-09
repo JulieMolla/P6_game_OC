@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/css/game.css">
     <title>Game</title>
 </head>
@@ -13,12 +22,21 @@
 <body>
     <header>
         <h1>L'école du droit</h1>
+        <button type="button" class="btn btn-light rules" data-toggle="modal" data-target=".bd-example-modal-lg">Règles
+            du
+            jeu</button>
     </header>
+
+
+
 
     <div class="game" id="game">
         <canvas id="map">
             Votre navigateur ne supporte pas le développement qui a été fait. Veuillez utiliser un autre utilisateur.
         </canvas>
+        <div class="legend">
+            <span id="legend"></span>
+        </div>
     </div>
 
     <div id="players">
@@ -59,6 +77,71 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="rulesModal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Bienvenue à l'école du droit !</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Si vous rêvez qu'on vous appelle "Maître", ce jeu est pour vous ! Un crime horrible s'est passé
+                        et
+                        vous devez absolument démontrer que votre adversaire a tort et que son client est bien le
+                        meurtrier.
+                    </p>
+                    <p>A chaque tour, un joueur peut se déplacer d’une à trois cases (horizontalement ou verticalement)
+                        avant de terminer son tour. Il ne peut évidemment pas passer à travers un obstacle.Si un joueur
+                        passe sur une case contenant une arme, il laisse son arme actuelle sur place et la remplace par
+                        la
+                        nouvelle.</p>
+                    <p>Les armes sont un peu particulières dans ce jeu car elles vont vous aider pour votre plaidoyer.
+                        Ainsi, vous aurez par défaut, en votre possession, le Code pénal. Au fur et à mesure de
+                        l'avancement
+                        de la partie, vous aurez la possibilité d'obtenir l'arme du crime, une empreinte digitale du
+                        meurtrier ou un enregistrement vidéo.</p>
+                    <p>Si votre chemin croise celui de l'autre joueur, un combat à mort s'engage. Le fonctionnement du
+                        jeu
+                        sera le suivant: chacun attaque à son tour. Les dégâts infligés dépendent de l'arme possédée par
+                        le
+                        joueur. Vous pourrez choisir de vous défendre (en objectant) et ainsi encaisser 50% de dégâts en
+                        moins qu'en temps normal. Vous pourrez également attaquer la partie adverse. Dès que les points
+                        de
+                        vie d'un joueur (initialement à 100) tombent à 0, celui-ci a perdu. Un message s'affichera et la
+                        partie sera terminée...mais vous aurez le droit de recommencer !</p>
+                </div>
+                <button type="button" class="btn btn-dark" data-dismiss="modal">
+                    Commencer le jeu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bd-example-modal-lg" id="winnerModal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Le juge a tranché !</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <span id="winner"></span> a gagné !
+                </div>
+                <button type="button" class="btn btn-dark" id="replay" data-dismiss="modal">
+                    Faire appel (ou rejouer pour le commun des mortels)
+                </button>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="assets/js/main.js"></script>

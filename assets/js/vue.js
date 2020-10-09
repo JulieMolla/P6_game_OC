@@ -99,5 +99,12 @@ export class Vue {
             img.src = options.sprite.url;
         }
     }
+
+    drawLegend(position, text) {
+        const x = position.x * this.unit; // c'est la position de la cellule en pixels
+        const y = position.y * this.unit; // idem
+        this.context.font = "20px serif";
+        this.context.fillText(text, x, y);
+    }
 }
 

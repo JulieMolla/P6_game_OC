@@ -6,8 +6,14 @@ import { Actions } from "./actions.js";
 import { Vue } from "./vue.js";
 import { Listener } from "./listener.js";
 
+const playerImages = [
+    { url: "/assets/images/lawyer.png", x: 0, y: 0, width: 63.75, height: 63.75 },
+    { url: "/assets/images/lawyer.png", x: 0, y: 63.75 * 3, width: 63.75, height: 63.75 },
+]
+
 export class Game {
-    constructor() {
+    constructor(session) {
+        this.session = session;
         const width = 15; // largeur de la map
         const height = 10; // hauteur de la map
         this.vue = new Vue(width, height); // création de la classe qui va gérer l'affichage
@@ -26,6 +32,10 @@ export class Game {
         if (remainingPlayers.length == 1) { // s'il n'y a plus qu'un joueur
             const winner = remainingPlayers[0]; // c'est le gagnant
             console.log(`${winner.name} a gagné !`);
+            $("#winnerModal").modal("show");
+            $("#winner").text(winner.name);
+            this.session.incrementScore(winner.name);
+            console.log(this.session);
         }
         this.draw(); // on raffraichit l'affichage
     }
@@ -68,17 +78,17 @@ export class Game {
     }
 
     generateWeapons() {
-        this.map.setRandomPosition(new Weapon("Arme du crime", "/assets/images/guncrime.png", 55));
+        this.map.setRandomPosition(new Weapon("Arme du crime", "/assets/images/police-pistol-hand-drawn-by-Vexels.svg", 55));
         this.map.setRandomPosition(new Weapon("Empreinte digitale", "/assets/images/fingerprint.png", 40));
-        this.map.setRandomPosition(new Weapon("Témoignage", "/assets/images/testimony.png", 25));
+        this.map.setRandomPosition(new Weapon("Enregistrement", "/assets/images/camera.png", 25));
     }
 
     addPlayer(name) { // on ajoute des joueurs manuellement 
         const defaultWeapon = new Weapon("Code pénal", "/assets/images/booklaw.svg", 10); // avec une arme par défaut
-        const player = new Player(name, defaultWeapon); // on instancie le joueur
+        const player = new Player(name, defaultWeapon, playerImages[this.players.length]); // on instancie le joueur
         this.map.setRandomPosition(player); // on place le joueur aléatoirement sur la carte
         this.players.push(player); // on ajoute le joueur à la liste des joueurs
-        this.map.draw()
+        this.map.draw();
     }
 
     askAttackOrDefend(enemy) {
@@ -92,6 +102,9 @@ export class Game {
         this.tour = i; // on met à jour le numéro du tour
         this.playerId = this.tour % this.players.length;
         this.player = this.players[this.playerId]; // définit le joueur actif pour le tour
+        if (!this.player) {
+            return;
+        }
         console.log(`A ${this.player.name} de jouer !`)
         const enemy = this.player.position.getAdjacentPlayer(); // vérifie s'il y a des ennemies autour du joueur
         if (enemy) {
