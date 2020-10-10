@@ -1,9 +1,8 @@
-body {
-    display: grid;
-    grid-template-rows: min-content auto 150px;
-    height: 100vh;
- 
+* {
+    box-sizing: border-box;
+}
 
+body {
     background-color: #343a40;
     grid-gap: 10px;
 }
@@ -13,18 +12,35 @@ header {
     padding: 10px; 
     background-color: #680212;
     color: #ebe7db;
+    height: 120px;
 }
-    
+
+main {
+    display: none;
+}
+
+.game {
+    padding: 10px;
+}
+
 canvas {
     display: block;
     margin: auto;
     background-color: #ebe7db;
 }
 
+label {
+    font-weight: bold;
+}
+
 .progress-bar {
     background-color: #aa393e;
 }
-    
+
+footer {
+    height: 180px;
+}
+
 #players {
     display: flex;
     justify-content: space-between;

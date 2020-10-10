@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-100">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -22,70 +22,78 @@
 <body>
     <header>
         <h1>L'école du droit</h1>
-        <button type="button" class="btn btn-light rules" data-toggle="modal" data-target=".bd-example-modal-lg">Règles
-            du
-            jeu</button>
+        <button type="button" class="btn btn-light rules" data-toggle="modal" data-target=".bd-example-modal-lg">
+            Règles du jeu
+        </button>
+        <button type="button" class="btn btn-light leave">
+            Abandonner
+        </button>
     </header>
 
 
-
-
-    <div class="game" id="game">
-        <canvas id="map">
-            Votre navigateur ne supporte pas le développement qui a été fait. Veuillez utiliser un autre utilisateur.
-        </canvas>
-        <div class="legend">
-            <span id="legend"></span>
+    <main>
+        <div class="game" id="game">
+            <canvas id="map">
+                Votre navigateur ne supporte pas le développement qui a été fait. Veuillez utiliser un autre utilisateur.
+            </canvas>
         </div>
-    </div>
-
-    <div id="players">
-        <div class="player" id="p0">
-            <h2>Maître <span id="p0_name"></span></h2>
-
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" id="p0_health"></div>
+    
+        <footer>
+            <div class="legend">
+                <span id="legend"></span>
             </div>
 
-            <div>
-                <span id="p0_weapon"></span>
-                <span id="p0_power"></span>
+            <div id="players">
+                <div class="player" id="p0">
+                    <h2>Maître <span id="p0_name"></span></h2>
+        
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" id="p0_health"></div>
+                    </div>
+        
+                    <div>
+                        <span id="p0_weapon"></span>
+                        <span id="p0_power"></span>
+                    </div>
+        
+                    <div class="buttons" id="p0_battle">
+                        <button class="attack" type="button">Attack</button>
+                        <button class="defend" type="button">Defend</button>
+                    </div>
+        
+                </div>
+        
+                <div class="player" id="p1">
+                    <h2>Maître <span id="p1_name"></span></h2>
+        
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" id="p1_health"></div>
+                    </div>
+        
+                    <div>
+                        <span id="p1_weapon"></span>
+                        <span id="p1_power"></span>
+                    </div>
+        
+                    <div class="buttons" id="p1_battle">
+                        <button class="attack" type="button">Attack</button>
+                        <button class="defend" type="button">Defend</button>
+                    </div>
+                </div>
+        
             </div>
+        </footer>
+        
+    </main>
 
-            <div class="buttons" id="p0_battle">
-                <button class="attack" type="button">Attack</button>
-                <button class="defend" type="button">Defend</button>
-            </div>
-
-        </div>
-
-        <div class="player" id="p1">
-            <h2>Maître <span id="p1_name"></span></h2>
-
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" id="p1_health"></div>
-            </div>
-
-            <div>
-                <span id="p1_weapon"></span>
-                <span id="p1_power"></span>
-            </div>
-
-            <div class="buttons" id="p1_battle">
-                <button class="attack" type="button">Attack</button>
-                <button class="defend" type="button">Defend</button>
-            </div>
-        </div>
-
-    </div>
-
+    
     <div class="modal fade bd-example-modal-lg" id="rulesModal" tabindex="-1" role="dialog"
-        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Bienvenue à l'école du droit !</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="rulesModalClose" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -115,31 +123,76 @@
                         de
                         vie d'un joueur (initialement à 100) tombent à 0, celui-ci a perdu. Un message s'affichera et la
                         partie sera terminée...mais vous aurez le droit de recommencer !</p>
+
+
+                    <form id="session-form">
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <label for="player1">Avocat de la défense :</label>
+                                <input type="text" class="form-control" id="player1" placeholder="Joueur 1">
+                            </div>
+
+                            <div class="col form-group">
+                                <label for="player2">Avocat de l'attaque :</label>
+                                <input type="text" class="form-control" id="player2" placeholder="Joueur 2">
+                            </div>
+                        </div>
+
+                        <p class="form-error text-danger">Veuillez saisir vos noms afin que le procès puisse commencer</p>
+
+                        <button type="button" class="btn btn-dark w-100" id="start">
+                            Commencer le jeu
+                        </button>
+                    </form>
+
                 </div>
-                <button type="button" class="btn btn-dark" data-dismiss="modal">
-                    Commencer le jeu
-                </button>
             </div>
         </div>
     </div>
 
     <div class="modal fade bd-example-modal-lg" id="winnerModal" tabindex="-1" role="dialog"
-        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Le juge a tranché !</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>
+                    </button> -->
                 </div>
 
                 <div class="modal-body">
                     <span id="winner"></span> a gagné !
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Joueur</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row" id="session_p1_name"></th>
+                                <td id="session_p1_score"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" id="session_p2_name"></th>
+                                <td id="session_p2_score"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-dark" id="replay" data-dismiss="modal">
+                            Faire appel (ou rejouer pour le commun des mortels)
+                        </button>
+                        <button type="button" class="btn btn-dark leave" data-dismiss="modal">
+                            Accepter le jugement
+                        </button>
+                    </div>
+
                 </div>
-                <button type="button" class="btn btn-dark" id="replay" data-dismiss="modal">
-                    Faire appel (ou rejouer pour le commun des mortels)
-                </button>
             </div>
         </div>
     </div>

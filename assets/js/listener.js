@@ -4,13 +4,19 @@ export class Listener {
     constructor(game) {
         this.game = game; // on garde une référence vers le jeu
         this.initMoveListener(); // on initialise un listener pour les déplacements
-        this.initHoverListener();
+        this.initHoverListener(); // on initialise un listener pour le survol de la souris
         this.initAttackListener(); // on initialise un listener pour les attaques
         this.initDefendListener(); // on initialise un listener pour les défenses
     }
 
+    destroy() {
+        $(window.vue.canvas).off(); // Arrêt du listener sur le canvas
+        $('.attack').off(); // Arrêt du listener sur le bouton attaque
+        $('.defend').off(); // Arrêt du listener sur le bouton défendre
+    }
+
     initMoveListener() {
-        window.vue.canvas.addEventListener("mousedown", (event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
+        $(window.vue.canvas).mousedown((event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
             if (!this.game.actions) { // s'il n'y a pas d'action, on n'exécute pas les actions pour déplacer le joueur
                 return;
             }
@@ -31,7 +37,7 @@ export class Listener {
     }
 
     initHoverListener() {
-        window.vue.canvas.addEventListener("mousemove", throttle((event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
+        $(window.vue.canvas).mousemove(throttle((event) => { // on crée un évènement qui permet de récupérer les clicks sur le canvas 
 
             const rect = window.vue.canvas.getBoundingClientRect(); // récupère la position du canvas à l'écran
             const unit = window.vue.unit;
@@ -47,27 +53,23 @@ export class Listener {
     }
 
     initAttackListener() {
-        document.querySelectorAll('.attack').forEach(element => { // pour chaque élément qui possède la classe attack
-            element.addEventListener('click', () => { // on créé un listener au clic
-                const killed = this.game.player.attack(this.game.enemy); // on attaque l'ennemi 
-                if (killed) { // s'il est tué
-                    this.game.enemykilled(this.game.enemy); // le jeu renverra le nom du gagnant
-                    return;
-                }
-                window.vue.removeBattleMode(); // on enlève le mode bataille de l'affichage
-                this.game.play(this.game.tour + 1) // nouveau tour de jeu
-            })
+        $('.attack').click(() => { // on créé un listener au clic
+            const killed = this.game.player.attack(this.game.enemy); // on attaque l'ennemi 
+            if (killed) { // s'il est tué
+                this.game.enemykilled(this.game.enemy); // le jeu renverra le nom du gagnant
+                return;
+            }
+            window.vue.removeBattleMode(); // on enlève le mode bataille de l'affichage
+            this.game.play(this.game.tour + 1) // nouveau tour de jeu
         })
 
     }
 
     initDefendListener() {
-        document.querySelectorAll('.defend').forEach(element => { // pour chaque élément qui possède la classe defend
-            element.addEventListener('click', () => { // on créé un listener au clic
+        $('.defend').click(() => { // on créé un listener au clic
                 this.game.player.defend(); // on se défend
                 window.vue.removeBattleMode(); // on enlève le mode bataille
                 this.game.play(this.game.tour + 1) // nouveau tour de jeu
-            })
         })
     }
 }

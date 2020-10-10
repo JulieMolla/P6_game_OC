@@ -53,7 +53,7 @@ export class Player {
         if (this.protect) { // si on est en position de défense, les dégâts sont réduits de moitié
             damage = weapon.power / 2;
         }
-        this.health -= damage;// on mets à jour les points de vie
+        this.health = Math.max(this.health - damage, 0);// on mets à jour les points de vie
         this.speak(`Oh ! Je suis blessé ! J'ai perdu ${damage} points de vie. Il me reste ${this.health} points de vie.`)
         if (this.health <= 0) { // si les points de vie sont inférieurs ou égal à 0
             this.speak(`Je suis mort !`);

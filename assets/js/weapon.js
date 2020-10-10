@@ -2,7 +2,7 @@
 export class Weapon {
     constructor(name, picture, power) {
         this.name = name
-        this.picture = picture
+        this.picture = picture;
         this.power = power
     }
 

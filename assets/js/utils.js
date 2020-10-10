@@ -4,7 +4,7 @@ export function getRandomNumber(min, max) {
 
 
 // https://programmingwithmosh.com/javascript/javascript-throttle-and-debounce-patterns/
-export function throttle(callback, interval) {
+export function throttle(callback, interval) { // permet d'éviter d'appeler une fonction plusieurs fois de suite trop rapidement
     let enableCall = true;
 
     return function (...args) {

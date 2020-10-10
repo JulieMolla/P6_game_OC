@@ -5,10 +5,11 @@ import { Player } from "./player.js";
 import { Actions } from "./actions.js";
 import { Vue } from "./vue.js";
 import { Listener } from "./listener.js";
+import { armeDuCrimeImg, codePenalImg, empreinteDigitaleImg, enregistrementImg, playerImg } from "./images.js";
 
 const playerImages = [
-    { url: "/assets/images/lawyer.png", x: 0, y: 0, width: 63.75, height: 63.75 },
-    { url: "/assets/images/lawyer.png", x: 0, y: 63.75 * 3, width: 63.75, height: 63.75 },
+    { url: playerImg, x: 0, y: 0, width: 63.75, height: 63.75 },
+    { url: playerImg, x: 0, y: 63.75 * 3, width: 63.75, height: 63.75 },
 ]
 
 export class Game {
@@ -17,7 +18,7 @@ export class Game {
         const width = 15; // largeur de la map
         const height = 10; // hauteur de la map
         this.vue = new Vue(width, height); // création de la classe qui va gérer l'affichage
-        new Listener(this); //création de la classe qui va gérer les actions de l'utilisateur 
+        this.listener = new Listener(this); //création de la classe qui va gérer les actions de l'utilisateur 
         this.map = new GameMap(width, height); // création de la map
 
         this.generateObstacles(15);// génération des obstacles
@@ -31,11 +32,7 @@ export class Game {
         const remainingPlayers = this.players.filter(player => player != enemy) // on supprime le joueur tué de la liste des joueurs
         if (remainingPlayers.length == 1) { // s'il n'y a plus qu'un joueur
             const winner = remainingPlayers[0]; // c'est le gagnant
-            console.log(`${winner.name} a gagné !`);
-            $("#winnerModal").modal("show");
-            $("#winner").text(winner.name);
-            this.session.incrementScore(winner.name);
-            console.log(this.session);
+            this.session.winner(winner)
         }
         this.draw(); // on raffraichit l'affichage
     }
@@ -78,13 +75,17 @@ export class Game {
     }
 
     generateWeapons() {
-        this.map.setRandomPosition(new Weapon("Arme du crime", "/assets/images/police-pistol-hand-drawn-by-Vexels.svg", 55));
-        this.map.setRandomPosition(new Weapon("Empreinte digitale", "/assets/images/fingerprint.png", 40));
-        this.map.setRandomPosition(new Weapon("Enregistrement", "/assets/images/camera.png", 25));
+        this.map.setRandomPosition(new Weapon("Arme du crime", armeDuCrimeImg, 55));
+        this.map.setRandomPosition(new Weapon("Empreinte digitale", empreinteDigitaleImg, 40));
+        this.map.setRandomPosition(new Weapon("Enregistrement", enregistrementImg, 25));
+        // this.map.setRandomPosition(new Weapon("Arme du crime", "/assets/images/police-pistol-hand-drawn-by-Vexels.svg", 55));
+        // this.map.setRandomPosition(new Weapon("Empreinte digitale", "/assets/images/fingerprint.png", 40));
+        // this.map.setRandomPosition(new Weapon("Enregistrement", "/assets/images/camera.png", 25));
     }
 
     addPlayer(name) { // on ajoute des joueurs manuellement 
-        const defaultWeapon = new Weapon("Code pénal", "/assets/images/booklaw.svg", 10); // avec une arme par défaut
+        const defaultWeapon = new Weapon("Code pénal", codePenalImg, 10); // avec une arme par défaut
+        // const defaultWeapon = new Weapon("Code pénal", "/assets/images/booklaw.svg", 10); // avec une arme par défaut
         const player = new Player(name, defaultWeapon, playerImages[this.players.length]); // on instancie le joueur
         this.map.setRandomPosition(player); // on place le joueur aléatoirement sur la carte
         this.players.push(player); // on ajoute le joueur à la liste des joueurs
@@ -105,7 +106,7 @@ export class Game {
         if (!this.player) {
             return;
         }
-        console.log(`A ${this.player.name} de jouer !`)
+        console.log(`A ${this.player.name} de plaider !`)
         const enemy = this.player.position.getAdjacentPlayer(); // vérifie s'il y a des ennemies autour du joueur
         if (enemy) {
             this.askAttackOrDefend(enemy); // s'il y en a, on demande à l'utilisateur ce qu'il veut faire

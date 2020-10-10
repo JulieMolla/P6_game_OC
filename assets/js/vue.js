@@ -1,8 +1,8 @@
 export class Vue {
     constructor(mapWidth, mapHeight) {
-        const canvasContainer = document.getElementById("game"); // on récupère l'élément qui va contenir le canvas
-        const pageWidth = canvasContainer.offsetWidth; // on récupère sa largeur
-        const pageHeight = canvasContainer.offsetHeight; // on récupère sa hauteur
+        const pageWidth = $(window).width(); // on récupère sa largeur
+        const gamePadding = $('.game').innerWidth() - $('.game').width();
+        const pageHeight = $(window).height() - $('header').height() - $('footer').height() - gamePadding; // on récupère sa hauteur
 
         this.unit = Math.floor(Math.min(pageWidth / mapWidth, pageHeight / mapHeight)); // on calcule l'unité de dimension en fonction de la taille du container et la taille de la map pour que le canvas prenne toute la page et soit entièrement visible
 
@@ -19,21 +19,21 @@ export class Vue {
     }
 
     setBattleMode() {
-        document.getElementById('players').classList.add('battle') // on ajoute la classe battle à l'élément d'Id player
+        $('#players').addClass('battle') // on ajoute la classe battle à l'élément d'Id player
 
     }
 
     removeBattleMode() {
-        document.getElementById('players').classList.remove('battle') // on l'enlève
+        $('#players').removeClass('battle') // on l'enlève
 
     }
 
     displayWinner(id) {
-        this.getPlayerDiv(id).classList.add('winner') // on ajoute la classe winner à l'élément correspondant au joueur
+        this.getPlayerDiv(id).addClass('winner') // on ajoute la classe winner à l'élément correspondant au joueur
     }
 
     getPlayerDiv(id) {
-        return document.getElementById(`p${id}`); // on récupère la div "player" dans le html correspondant au joueur actif
+        return $(`#p${id}`); // on récupère la div "player" dans le html correspondant au joueur actif
     }
 
     displayPlayers(players, tour) {
@@ -42,21 +42,21 @@ export class Vue {
 
             const playerDiv = this.getPlayerDiv(i); // on récupère la div correspondant à ce joueur
             if (i === tour % players.length) { // s'il est actif
-                playerDiv.classList.add("active") // on ajoute la classe "active"
+                playerDiv.addClass("active") // on ajoute la classe "active"
             } else { //sinon
-                playerDiv.classList.remove("active") // on enlève la classe "active"
+                playerDiv.removeClass("active") // on enlève la classe "active"
             }
 
-            const nameEl = document.getElementById(`p${i}_name`) // élément qui va contenir le nom
-            const healthEl = document.getElementById(`p${i}_health`) // élément qui va contenir les points de vie
-            const weaponEl = document.getElementById(`p${i}_weapon`) // éléménet qui va contenir l'arme détenue par le joueur
-            const powerEl = document.getElementById(`p${i}_power`) // élément qui va contenir la puissance de l'arme détenue
+            // const nameEl = $(`#p${i}_name`) // élément qui va contenir le nom
+            // const healthEl = $(`#p${i}_health`) // élément qui va contenir les points de vie
+            // const weaponEl = $(`#p${i}_weapon`) // éléménet qui va contenir l'arme détenue par le joueur
+            // const powerEl = $(`#p${i}_power`) // élément qui va contenir la puissance de l'arme détenue
 
-            nameEl.innerText = player.name; // on affiche le nom du joueur dans l'élément
-            healthEl.style.width = `${player.health}%`; // on définit la taille de la barre de vie
-            healthEl.innerText = player.health; // on écrit les points de vie du joueur
-            weaponEl.innerText = player.weapon.name; // on affiche l'arme du joueur
-            powerEl.innerText = player.weapon.power; // on affiche la puissance de l'arme du joueur
+            $(`#p${i}_name`).text(player.name); // on affiche le nom du joueur dans l'élément
+            $(`#p${i}_health`).width(`${player.health}%`); // on définit la taille de la barre de vie
+            $(`#p${i}_health`).text(player.health); // on écrit les points de vie du joueur
+            $(`#p${i}_weapon`).text(player.weapon.name); // on affiche l'arme du joueur
+            $(`#p${i}_power`).text(player.weapon.power); // on affiche la puissance de l'arme du joueur
         }
     }
 
@@ -84,27 +84,14 @@ export class Vue {
         }
 
         if (options.image) {
-            const img = new Image(); // création d'un objet Image 
-            img.onload = () => { // action réalisée quand l'image est chargée
-                this.context.drawImage(img, x, y, this.unit, this.unit); //affichage de l'image dans le canvas
-            }
-            img.src = options.image; // définition de l'url de l'image
+            const img = options.image
+            this.context.drawImage(img, x, y, this.unit, this.unit); //affichage de l'image dans le canvas
         }
 
         if (options.sprite) {
-            const img = new Image(); // création d'un objet Image
-            img.onload = () => { // action réalisée quand l'image est chargée
-                this.context.drawImage(img, options.sprite.x, options.sprite.y, options.sprite.width, options.sprite.height, x, y, this.unit, this.unit); // affichage du sprite dans le canvas
-            }
-            img.src = options.sprite.url;
+            const img = options.sprite.url
+            this.context.drawImage(img, options.sprite.x, options.sprite.y, options.sprite.width, options.sprite.height, x, y, this.unit, this.unit); // affichage du sprite dans le canvas
         }
-    }
-
-    drawLegend(position, text) {
-        const x = position.x * this.unit; // c'est la position de la cellule en pixels
-        const y = position.y * this.unit; // idem
-        this.context.font = "20px serif";
-        this.context.fillText(text, x, y);
     }
 }
 
