@@ -103,6 +103,7 @@ export class Game {
         this.tour = i; // on met à jour le numéro du tour
         this.playerId = this.tour % this.players.length;
         this.player = this.players[this.playerId]; // définit le joueur actif pour le tour
+        $('#activePlayer').text(this.player.name)
         if (!this.player) {
             return;
         }

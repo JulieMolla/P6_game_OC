@@ -7,12 +7,14 @@ export class Listener {
         this.initHoverListener(); // on initialise un listener pour le survol de la souris
         this.initAttackListener(); // on initialise un listener pour les attaques
         this.initDefendListener(); // on initialise un listener pour les défenses
+        this.initResizeListener(); // on initialise un listener sur le redimissionnement de la fenetre
     }
 
     destroy() {
         $(window.vue.canvas).off(); // Arrêt du listener sur le canvas
         $('.attack').off(); // Arrêt du listener sur le bouton attaque
         $('.defend').off(); // Arrêt du listener sur le bouton défendre
+        $(window).off('resize'); // Arrêt du listener sur le resize de la fenêtre
     }
 
     initMoveListener() {
@@ -71,5 +73,12 @@ export class Listener {
                 window.vue.removeBattleMode(); // on enlève le mode bataille
                 this.game.play(this.game.tour + 1) // nouveau tour de jeu
         })
+    }
+
+    initResizeListener() { // permet de redimensionner le canvas quand on redimensionne la fenêtre
+        $(window).resize(throttle(() => { // utilisation de throttle pour ne pas effectuer le redimensionnement trop rapidement
+            this.game.vue.calculateUnit(this.game.map.width, this.game.map.height); // on recalcule l'unité de dimension
+            this.game.draw(); // on rafraichit l'affichage
+        }, 100))
     }
 }

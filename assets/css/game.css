@@ -19,6 +19,12 @@ main {
     display: none;
 }
 
+.tour {
+    margin-top: 10px;
+    color: #ebe7db;
+    text-align: center;
+}
+
 .game {
     padding: 10px;
 }

@@ -1,17 +1,21 @@
 export class Vue {
     constructor(mapWidth, mapHeight) {
-        const pageWidth = $(window).width(); // on récupère sa largeur
-        const gamePadding = $('.game').innerWidth() - $('.game').width();
-        const pageHeight = $(window).height() - $('header').height() - $('footer').height() - gamePadding; // on récupère sa hauteur
-
-        this.unit = Math.floor(Math.min(pageWidth / mapWidth, pageHeight / mapHeight)); // on calcule l'unité de dimension en fonction de la taille du container et la taille de la map pour que le canvas prenne toute la page et soit entièrement visible
-
         this.canvas = document.getElementById("map"); // on récupère l'élément canvas
-        this.canvas.width = this.unit * mapWidth; // on définit sa largeur
-        this.canvas.height = this.unit * mapHeight; // on définit sa hauteur
         this.context = this.canvas.getContext("2d"); // on récupère son contexte
+        this.calculateUnit(mapWidth, mapHeight); // on calcule l'unité de dimension en fonction de la taille du container et la taille de la map pour que le canvas prenne toute la page et soit entièrement visible
 
         window.vue = this; // on assigne la classe dans une variable globale pour qu'elle soit accessible dans tout le code
+    }
+
+    calculateUnit(mapWidth, mapHeight) {
+        const pageWidth = $(window).width() - 100; // on récupère sa largeur
+        const gamePadding = $('.game').innerWidth() - $('.game').width();
+        const pageHeight = $(window).height() - $('header').height() - $('footer').height() - gamePadding - 100; // on récupère sa hauteur
+
+        this.unit = Math.floor(Math.min(pageWidth / mapWidth, pageHeight / mapHeight));
+
+        this.canvas.width = this.unit * mapWidth; // on définit sa largeur
+        this.canvas.height = this.unit * mapHeight; // on définit sa hauteur
     }
 
     clear() {
